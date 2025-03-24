@@ -1,0 +1,76 @@
+openapi: 3.1.0
+info:
+  title: API de precios
+  description: API para obtener los precios según fecha, producto y cadena.
+  version: 1.0.0
+
+paths:
+  /price:
+    get:
+      summary: Obtiene el precio
+      description: Recupera el precio para un producto y cadena específicos en una fecha determinada.
+      parameters:
+        - name: applicationDate
+          in: query
+          required: true
+          description: Fecha de aplicación en formato ISO (YYYY-MM-DDTHH:MM:SS).
+          schema:
+            type: string
+            format: date
+            example: "2020-06-15T16:00:00"
+        - name: productId
+          in: query
+          required: true
+          description: Identificador único del producto.
+          schema:
+            type: integer
+            example: 35455
+        - name: brandId
+          in: query
+          required: true
+          description: Identificador único de la cadena.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Precio obtenido correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idProducto:
+                    type: integer
+                    description: Identificador único del producto.
+                    example: 101
+                  idCadena:
+                    type: integer
+                    description: Identificador único de la cadena.
+                    example: 15
+                  tarifaAplicar:
+                    type: string
+                    description: Tarifa que se aplicará.
+                    example: "Tarifa estándar"
+                  fechasAplicacion:
+                    type: object
+                    properties:
+                      inicio:
+                        type: string
+                        format: date-time
+                        description: Fecha de inicio de la tarifa.
+                        example: "2025-03-21T00:00:00Z"
+                      fin:
+                        type: string
+                        format: date-time
+                        description: Fecha de fin de la tarifa.
+                        example: "2025-03-22T23:59:59Z"
+                  precioFinal:
+                    type: number
+                    format: float
+                    description: Precio final a aplicar.
+                    example: 49.99
+        '400':
+          description: Parámetros de entrada no válidos.
+        '404':
+          description: No se encontró ninguna tarifa aplicable.
